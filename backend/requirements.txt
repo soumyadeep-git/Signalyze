@@ -1,0 +1,14 @@
+fastapi[standard]
+uvicorn[standard]
+langchain
+langchain-groq
+langgraph
+pydantic>=2.0
+pydantic-settings
+httpx
+beautifulsoup4
+lxml
+duckduckgo-search
+aiosqlite
+python-dotenv
+sse-starlette
