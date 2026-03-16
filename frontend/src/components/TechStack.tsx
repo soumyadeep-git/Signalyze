@@ -8,14 +8,14 @@ interface TechStackProps {
 }
 
 const CATEGORY_COLORS: Record<string, string> = {
-  CRM: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300",
-  "Marketing Automation": "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300",
-  Analytics: "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-300",
-  "Website Platform": "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300",
-  Cloud: "bg-sky-100 text-sky-700 dark:bg-sky-900/30 dark:text-sky-300",
-  Support: "bg-rose-100 text-rose-700 dark:bg-rose-900/30 dark:text-rose-300",
-  Communication: "bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300",
-  Payment: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300",
+  CRM: "bg-blue-500/20 text-blue-200 border border-blue-500/30",
+  "Marketing Automation": "bg-purple-500/20 text-purple-200 border border-purple-500/30",
+  Analytics: "bg-primary/20 text-primary-light border border-primary/30",
+  "Website Platform": "bg-emerald-500/20 text-emerald-200 border border-emerald-500/30",
+  Cloud: "bg-sky-500/20 text-sky-200 border border-sky-500/30",
+  Support: "bg-rose-500/20 text-rose-200 border border-rose-500/30",
+  Communication: "bg-indigo-500/20 text-indigo-200 border border-indigo-500/30",
+  Payment: "bg-green-500/20 text-green-200 border border-green-500/30",
 };
 
 export default function TechStack({ items }: TechStackProps) {
@@ -29,7 +29,7 @@ export default function TechStack({ items }: TechStackProps) {
   }, {});
 
   return (
-    <div className="bg-card rounded-xl border border-border p-6 animate-slide-up">
+    <div className="glass-panel rounded-xl p-6 animate-slide-up">
       <h3 className="text-sm font-semibold text-muted uppercase tracking-wider mb-4 flex items-center gap-2">
         <Cpu className="w-4 h-4" />
         Technology Stack

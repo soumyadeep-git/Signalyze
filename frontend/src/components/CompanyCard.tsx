@@ -15,7 +15,7 @@ export default function CompanyCard({ identification, profile }: CompanyCardProp
     : null;
 
   return (
-    <div className="bg-card rounded-xl border border-border p-6 animate-slide-up">
+    <div className="glass-panel rounded-xl p-6 animate-slide-up">
       <div className="flex items-start gap-4">
         {logoUrl ? (
           <img
@@ -30,7 +30,7 @@ export default function CompanyCard({ identification, profile }: CompanyCardProp
           </div>
         )}
         <div className="flex-1 min-w-0">
-          <h2 className="text-xl font-bold truncate">
+          <h2 className="text-xl font-serif font-normal tracking-wide truncate text-white">
             {profile.company_name || identification.company_name || "Unknown Company"}
           </h2>
           {domain && (

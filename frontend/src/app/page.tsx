@@ -1,207 +1,164 @@
 "use client";
 
-import { useState, useCallback } from "react";
-import { Sparkles } from "lucide-react";
-import InputForm from "@/components/InputForm";
-import AgentPipeline from "@/components/AgentPipeline";
-import CompanyCard from "@/components/CompanyCard";
-import IntentGauge from "@/components/IntentGauge";
-import TechStack from "@/components/TechStack";
-import LeadershipList from "@/components/LeadershipList";
-import ActionsPanel from "@/components/ActionsPanel";
-import AISummary from "@/components/AISummary";
-import type {
-  AnalyzeRequest,
-  CompanyInput,
-  AccountIntelligence,
-} from "@/lib/api";
-import { analyzeAccount, analyzeBatch } from "@/lib/api";
+import Link from "next/link";
+import { Sparkles, ArrowRight, Building2, User, Globe, Activity } from "lucide-react";
 
-const EMPTY_RESULT: AccountIntelligence = {
-  company_identification: { company_name: "", domain: "", confidence: 0 },
-  company_profile: {
-    company_name: "", domain: "", industry: "", company_size: "",
-    headquarters: "", founding_year: "", description: "", website: "",
-  },
-  tech_stack: [],
-  leadership: [],
-  business_signals: [],
-  persona: { likely_persona: "", confidence: 0, reasoning: "" },
-  intent: { score: 0, stage: "", reasoning: "", signals: [] },
-  ai_summary: "",
-  recommended_actions: [],
-};
-
-export default function Home() {
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<AccountIntelligence | null>(null);
-  const [batchResults, setBatchResults] = useState<AccountIntelligence[]>([]);
-  const [selectedBatch, setSelectedBatch] = useState<number | null>(null);
-  const [agentStatuses, setAgentStatuses] = useState<Record<string, string>>({});
-  const [error, setError] = useState<string | null>(null);
-
-  const allAgents = [
-    "identification", "enrichment", "tech_stack",
-    "leadership", "intent", "persona", "synthesis",
+export default function LandingPage() {
+  const companies = [
+    { name: "Acme Corp", industry: "Financial Services", intent: 9.2, persona: "VP Sales" },
+    { name: "TechNova", industry: "SaaS", intent: 8.5, persona: "CTO" },
+    { name: "Global Logistics", industry: "Supply Chain", intent: 7.8, persona: "Director Ops" },
+    { name: "Stripe", industry: "Fintech", intent: 9.5, persona: "Head of Growth" },
+    { name: "Vercel", industry: "Cloud Infrastructure", intent: 8.9, persona: "Engineering Lead" },
   ];
 
-  const handleSubmit = useCallback(async (req: AnalyzeRequest) => {
-    setLoading(true);
-    setError(null);
-    setResult(null);
-    setBatchResults([]);
-    setSelectedBatch(null);
-
-    const statuses: Record<string, string> = {};
-    allAgents.forEach((a) => { statuses[a] = "pending"; });
-    setAgentStatuses({ ...statuses });
-
-    try {
-      statuses.identification = "running";
-      setAgentStatuses({ ...statuses });
-
-      const data = await analyzeAccount(req);
-
-      allAgents.forEach((a) => { statuses[a] = "complete"; });
-      setAgentStatuses({ ...statuses });
-      setResult(data);
-    } catch (err: unknown) {
-      setError((err as Error).message || "Analysis failed");
-      allAgents.forEach((a) => {
-        if (statuses[a] === "running") statuses[a] = "pending";
-      });
-      setAgentStatuses({ ...statuses });
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const handleBatchSubmit = useCallback(async (companies: CompanyInput[]) => {
-    setLoading(true);
-    setError(null);
-    setResult(null);
-    setBatchResults([]);
-    setSelectedBatch(null);
-    setAgentStatuses({});
-
-    try {
-      const data = await analyzeBatch(companies);
-      setBatchResults(data);
-      if (data.length > 0) {
-        setSelectedBatch(0);
-        setResult(data[0]);
-      }
-    } catch (err: unknown) {
-      setError((err as Error).message || "Batch analysis failed");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
-
-  const displayResult = result || EMPTY_RESULT;
-  const hasResult = result !== null;
-
   return (
-    <div className="min-h-screen bg-background">
-      <header className="border-b border-border bg-card/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center gap-3">
-          <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary to-accent flex items-center justify-center">
-            <Sparkles className="w-5 h-5 text-white" />
+    <div className="min-h-screen text-foreground overflow-hidden relative flex flex-col">
+      {/* Abstract Background Orbs / Shapes */}
+      <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] rounded-full bg-primary/10 blur-[120px] animate-float pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] rounded-full bg-primary-dark/10 blur-[120px] animate-float-delayed pointer-events-none" />
+      <div className="absolute top-[30%] right-[20%] w-[30%] h-[30%] rounded-full bg-primary-light/5 blur-[100px] animate-pulse-slow pointer-events-none" />
+
+      {/* Navigation */}
+      <nav className="w-full px-8 py-6 flex items-center justify-between relative z-10">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-dark flex items-center justify-center shadow-lg shadow-primary/20">
+            <Sparkles className="w-5 h-5 text-black" />
           </div>
-          <div>
-            <h1 className="text-lg font-bold">Fello AI</h1>
-            <p className="text-xs text-muted">Account Intelligence & Enrichment</p>
+          <span className="font-serif text-2xl font-light tracking-wide text-primary-light">Signalyze</span>
+        </div>
+        <Link 
+          href="/dashboard" 
+          className="px-6 py-2.5 rounded-full glass-panel text-primary-light hover:bg-white/10 transition-all duration-300 font-medium text-sm border border-primary/30"
+        >
+          Enter Platform
+        </Link>
+      </nav>
+
+      {/* Hero Section */}
+      <main className="flex-1 w-full max-w-[1400px] mx-auto px-8 relative z-10 flex flex-col lg:flex-row items-center justify-between gap-12">
+        {/* Left Side: Hero Text */}
+        <div className="flex-1 space-y-8 animate-slide-up text-left pt-10 lg:pt-0">
+          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-panel text-primary-light text-sm font-light mb-2 border border-primary/20">
+            <span className="relative flex h-2.5 w-2.5">
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-primary"></span>
+            </span>
+            Next-Gen Intelligence Engine Live
+          </div>
+          
+          <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl font-light leading-[1.15] text-white tracking-wide">
+            Illuminate Hidden <br />
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary-light via-primary to-primary-dark">
+              Account Revenue
+            </span>
+          </h1>
+          
+          <p className="text-base md:text-lg text-secondary-foreground max-w-xl leading-relaxed font-light opacity-80">
+            Transform anonymous website signals and raw company names into rich, actionable sales intelligence using autonomous AI agents.
+          </p>
+
+          <div className="pt-6">
+            <Link 
+              href="/dashboard"
+              className="inline-flex items-center gap-3 px-8 py-4 rounded-full bg-gradient-to-r from-primary to-primary-dark text-black font-medium text-base shadow-[0_8px_30px_rgba(255,107,0,0.3)] hover:-translate-y-1 transition-all duration-300"
+            >
+              Launch Dashboard
+              <ArrowRight className="w-5 h-5" />
+            </Link>
           </div>
         </div>
-      </header>
 
-      <main className="max-w-7xl mx-auto px-4 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-          {/* Left: Input */}
-          <div className="lg:col-span-4 space-y-6">
-            <InputForm
-              onSubmit={handleSubmit}
-              onBatchSubmit={handleBatchSubmit}
-              loading={loading}
-            />
-
-            {batchResults.length > 0 && (
-              <div className="bg-card rounded-xl border border-border p-4">
-                <h3 className="text-sm font-semibold text-muted uppercase tracking-wider mb-3">
-                  Batch Results ({batchResults.length})
-                </h3>
-                <div className="space-y-2 max-h-64 overflow-y-auto">
-                  {batchResults.map((r, i) => (
-                    <button
-                      key={i}
-                      onClick={() => { setSelectedBatch(i); setResult(r); }}
-                      className={`w-full text-left px-3 py-2 rounded-lg text-sm transition-colors ${
-                        selectedBatch === i
-                          ? "bg-primary/10 text-primary font-medium"
-                          : "hover:bg-secondary"
-                      }`}
-                    >
-                      {r.company_profile?.company_name ||
-                        r.company_identification?.company_name ||
-                        `Company ${i + 1}`}
-                    </button>
-                  ))}
+        {/* Right Side: Vertical Marquee Animation */}
+        <div className="flex-1 w-full h-[600px] relative z-10 flex justify-end overflow-hidden hide-scrollbar mask-image-vertical pt-10 pb-10">
+          {/* Top and Bottom gradient masks for smooth fade out */}
+          <div className="absolute inset-x-0 top-0 h-32 bg-gradient-to-b from-background to-transparent z-20 pointer-events-none" />
+          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-background to-transparent z-20 pointer-events-none" />
+          
+          <div className="flex gap-6 relative right-0 lg:right-[-20px]">
+            {/* Column 1 - Marquee Up */}
+            <div className="flex flex-col gap-6 animate-marquee-vertical w-[320px]">
+              {[...companies, ...companies, ...companies].map((company, i) => (
+                <div 
+                  key={`col1-${i}`} 
+                  className="glass-panel rounded-2xl p-6 flex-shrink-0 transition-colors border border-primary/20 hover:border-primary/50"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="font-serif font-light text-xl text-white flex items-center gap-2 tracking-wide">
+                        <Building2 className="w-5 h-5 text-primary" />
+                        {company.name}
+                      </h3>
+                      <p className="text-sm text-secondary-foreground mt-1 flex items-center gap-1 font-light">
+                        <Globe className="w-3.5 h-3.5" />
+                        {company.industry}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <div className="text-xs text-muted uppercase font-light tracking-wide mb-1">Intent</div>
+                      <div className="text-primary font-light text-lg flex items-center gap-1">
+                        <Activity className="w-4 h-4" />
+                        {company.intent.toFixed(1)}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 pt-4 border-t border-border/50 flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+                        <User className="w-4 h-4 text-primary" />
+                      </div>
+                      <span className="text-sm font-light text-white">{company.persona}</span>
+                    </div>
+                    <span className="text-xs font-medium text-primary bg-primary/10 px-3 py-1 rounded-full border border-primary/20">
+                      Enriched
+                    </span>
+                  </div>
                 </div>
-              </div>
-            )}
-          </div>
-
-          {/* Right: Results */}
-          <div className="lg:col-span-8 space-y-6">
-            {loading && Object.keys(agentStatuses).length > 0 && (
-              <AgentPipeline statuses={agentStatuses} />
-            )}
-
-            {error && (
-              <div className="bg-accent-danger/10 border border-accent-danger/20 rounded-xl p-4 text-sm text-accent-danger">
-                {error}
-              </div>
-            )}
-
-            {!hasResult && !loading && (
-              <div className="flex flex-col items-center justify-center py-20 text-center">
-                <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-primary/10 to-accent/10 flex items-center justify-center mb-6">
-                  <Sparkles className="w-10 h-10 text-primary" />
+              ))}
+            </div>
+            
+            {/* Column 2 - Marquee Up (Slower, Offset) */}
+            <div className="flex flex-col gap-6 animate-marquee-vertical-slow w-[320px] mt-12 hidden md:flex">
+              {[...companies.reverse(), ...companies.reverse(), ...companies.reverse()].map((company, i) => (
+                <div 
+                  key={`col2-${i}`} 
+                  className="glass-panel rounded-2xl p-6 flex-shrink-0 transition-colors opacity-90 border border-primary/10 hover:border-primary/30"
+                >
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="font-serif font-light text-xl text-white/80 flex items-center gap-2 tracking-wide">
+                        <Building2 className="w-5 h-5 text-primary/80" />
+                        {company.name}
+                      </h3>
+                      <p className="text-sm text-secondary-foreground mt-1 flex items-center gap-1 font-light">
+                        <Globe className="w-3.5 h-3.5" />
+                        {company.industry}
+                      </p>
+                    </div>
+                    <div className="flex flex-col items-end">
+                      <div className="text-xs text-muted uppercase font-light tracking-wide mb-1">Intent</div>
+                      <div className="text-primary/80 font-light text-lg flex items-center gap-1">
+                        <Activity className="w-4 h-4" />
+                        {company.intent.toFixed(1)}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="mt-6 pt-4 border-t border-border/30 flex justify-between items-center">
+                    <div className="flex items-center gap-2">
+                      <div className="w-8 h-8 rounded-full bg-primary/5 flex items-center justify-center">
+                        <User className="w-4 h-4 text-primary/80" />
+                      </div>
+                      <span className="text-sm font-light text-white/80">{company.persona}</span>
+                    </div>
+                    <span className="text-xs font-medium text-primary/80 bg-primary/5 px-3 py-1 rounded-full border border-primary/10">
+                      Detected
+                    </span>
+                  </div>
                 </div>
-                <h2 className="text-xl font-bold mb-2">AI Account Intelligence</h2>
-                <p className="text-muted max-w-md">
-                  Enter a company name, paste visitor signals, or upload a batch CSV to generate
-                  sales-ready intelligence powered by multi-agent AI.
-                </p>
-              </div>
-            )}
-
-            {hasResult && (
-              <>
-                <AISummary summary={displayResult.ai_summary} />
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <CompanyCard
-                    identification={displayResult.company_identification}
-                    profile={displayResult.company_profile}
-                  />
-                  {(displayResult.intent.score > 0 || displayResult.intent.stage) && (
-                    <IntentGauge intent={displayResult.intent} />
-                  )}
-                </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <TechStack items={displayResult.tech_stack} />
-                  <LeadershipList leaders={displayResult.leadership} />
-                </div>
-
-                <ActionsPanel
-                  actions={displayResult.recommended_actions}
-                  signals={displayResult.business_signals}
-                  persona={displayResult.persona}
-                />
-              </>
-            )}
+              ))}
+            </div>
           </div>
         </div>
       </main>

@@ -11,7 +11,7 @@ export default function LeadershipList({ leaders }: LeadershipListProps) {
   if (!leaders || leaders.length === 0) return null;
 
   return (
-    <div className="bg-card rounded-xl border border-border p-6 animate-slide-up">
+    <div className="glass-panel rounded-xl p-6 animate-slide-up">
       <h3 className="text-sm font-semibold text-muted uppercase tracking-wider mb-4 flex items-center gap-2">
         <UserCheck className="w-4 h-4" />
         Key Decision Makers
@@ -20,9 +20,9 @@ export default function LeadershipList({ leaders }: LeadershipListProps) {
         {leaders.map((leader, i) => (
           <div
             key={i}
-            className="flex items-center gap-3 p-3 rounded-lg bg-secondary/50 hover:bg-secondary transition-colors"
+            className="flex items-center gap-3 p-3 rounded-lg bg-black/20 hover:bg-black/40 transition-colors border border-primary/5"
           >
-            <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-bold flex-shrink-0">
+            <div className="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center text-sm font-medium flex-shrink-0">
               {leader.name
                 .split(" ")
                 .map((n) => n[0])

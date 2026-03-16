@@ -21,7 +21,7 @@ interface AgentPipelineProps {
 
 export default function AgentPipeline({ statuses }: AgentPipelineProps) {
   return (
-    <div className="bg-card rounded-xl border border-border p-6">
+    <div className="glass-panel rounded-xl p-6">
       <h3 className="text-sm font-semibold text-muted uppercase tracking-wider mb-4">
         Agent Pipeline
       </h3>
@@ -34,9 +34,9 @@ export default function AgentPipeline({ statuses }: AgentPipelineProps) {
               <div
                 className={cn(
                   "flex flex-col items-center gap-1.5 px-3 py-2 rounded-lg transition-all duration-300 min-w-[80px]",
-                  status === "complete" && "bg-accent/10",
-                  status === "running" && "bg-primary/10",
-                  status === "pending" && "bg-secondary"
+                  status === "complete" && "bg-accent/10 border border-accent/20",
+                  status === "running" && "bg-primary/10 border border-primary/20",
+                  status === "pending" && "bg-black/20 border border-white/5"
                 )}
               >
                 <div

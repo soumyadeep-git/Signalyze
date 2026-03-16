@@ -13,7 +13,7 @@ export default function ActionsPanel({ actions, signals, persona }: ActionsPanel
   return (
     <div className="space-y-4">
       {persona && persona.likely_persona && persona.likely_persona !== "Unknown" && (
-        <div className="bg-card rounded-xl border border-border p-6 animate-slide-up">
+        <div className="glass-panel rounded-xl p-6 animate-slide-up">
           <h3 className="text-sm font-semibold text-muted uppercase tracking-wider mb-3">
             Likely Persona
           </h3>
@@ -35,7 +35,7 @@ export default function ActionsPanel({ actions, signals, persona }: ActionsPanel
       )}
 
       {actions && actions.length > 0 && (
-        <div className="bg-card rounded-xl border border-border p-6 animate-slide-up">
+        <div className="glass-panel rounded-xl p-6 animate-slide-up">
           <h3 className="text-sm font-semibold text-muted uppercase tracking-wider mb-4 flex items-center gap-2">
             <Zap className="w-4 h-4" />
             Recommended Actions
@@ -46,7 +46,7 @@ export default function ActionsPanel({ actions, signals, persona }: ActionsPanel
                 key={i}
                 className="flex items-start gap-3 p-3 rounded-lg bg-primary/5 border border-primary/10"
               >
-                <span className="w-6 h-6 rounded-full bg-primary text-white text-xs flex items-center justify-center flex-shrink-0 mt-0.5 font-bold">
+                <span className="w-6 h-6 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center flex-shrink-0 mt-0.5 font-medium border border-primary/30">
                   {i + 1}
                 </span>
                 <span className="text-sm">{action}</span>
@@ -57,14 +57,14 @@ export default function ActionsPanel({ actions, signals, persona }: ActionsPanel
       )}
 
       {signals && signals.length > 0 && (
-        <div className="bg-card rounded-xl border border-border p-6 animate-slide-up">
+        <div className="glass-panel rounded-xl p-6 animate-slide-up">
           <h3 className="text-sm font-semibold text-muted uppercase tracking-wider mb-4 flex items-center gap-2">
             <TrendingUp className="w-4 h-4" />
             Business Signals
           </h3>
           <div className="space-y-2">
             {signals.map((signal, i) => (
-              <div key={i} className="p-3 rounded-lg bg-secondary/50">
+              <div key={i} className="p-4 rounded-lg bg-black/20 border border-primary/10">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-accent-warn/10 text-accent-warn">
                     {signal.signal_type}

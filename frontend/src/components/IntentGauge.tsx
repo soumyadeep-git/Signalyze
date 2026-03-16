@@ -24,7 +24,7 @@ export default function IntentGauge({ intent }: IntentGaugeProps) {
   };
 
   return (
-    <div className="bg-card rounded-xl border border-border p-6 animate-slide-up">
+    <div className="glass-panel rounded-xl p-6 animate-slide-up">
       <h3 className="text-sm font-semibold text-muted uppercase tracking-wider mb-4">
         Buyer Intent
       </h3>
@@ -50,7 +50,7 @@ export default function IntentGauge({ intent }: IntentGaugeProps) {
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center">
-            <span className="text-2xl font-bold" style={{ color }}>
+            <span className="text-2xl font-light tracking-tight" style={{ color }}>
               {score.toFixed(1)}
             </span>
             <span className="text-xs text-muted">/10</span>

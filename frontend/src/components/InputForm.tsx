@@ -109,8 +109,8 @@ export default function InputForm({ onSubmit, onBatchSubmit, loading }: InputFor
   ];
 
   return (
-    <div className="bg-card rounded-xl border border-border overflow-hidden">
-      <div className="flex border-b border-border">
+    <div className="glass-panel rounded-xl overflow-hidden shadow-2xl shadow-black/50">
+      <div className="flex border-b border-primary/20 bg-black/20">
         {tabs.map((t) => {
           const Icon = t.icon;
           return (
@@ -118,10 +118,10 @@ export default function InputForm({ onSubmit, onBatchSubmit, loading }: InputFor
               key={t.key}
               onClick={() => setTab(t.key)}
               className={cn(
-                "flex-1 px-4 py-3 text-sm font-medium flex items-center justify-center gap-2 transition-colors",
-                tab === t.key
-                  ? "bg-primary/5 text-primary border-b-2 border-primary"
-                  : "text-muted hover:text-foreground hover:bg-secondary/50"
+                "flex-1 px-4 py-4 text-sm font-medium flex items-center justify-center gap-2 transition-all duration-300",
+                  tab === t.key
+                    ? "bg-primary/10 text-primary-light border-b-2 border-primary shadow-[inset_0_-2px_10px_rgba(255,107,0,0.1)]"
+                    : "text-secondary-foreground hover:text-white hover:bg-white/5"
               )}
             >
               <Icon className="w-4 h-4" />
@@ -141,7 +141,7 @@ export default function InputForm({ onSubmit, onBatchSubmit, loading }: InputFor
                 value={companyName}
                 onChange={(e) => setCompanyName(e.target.value)}
                 placeholder="e.g. Rocket Mortgage"
-                className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/40"
+                className="w-full px-4 py-3 rounded-lg border border-primary/20 bg-black/40 text-white placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                 onKeyDown={(e) => e.key === "Enter" && handleCompanySubmit()}
               />
             </div>
@@ -154,13 +154,13 @@ export default function InputForm({ onSubmit, onBatchSubmit, loading }: InputFor
                 value={companyDomain}
                 onChange={(e) => setCompanyDomain(e.target.value)}
                 placeholder="e.g. rocketmortgage.com"
-                className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/40"
+                className="w-full px-4 py-3 rounded-lg border border-primary/20 bg-black/40 text-white placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
               />
             </div>
             <button
               onClick={handleCompanySubmit}
               disabled={loading || !companyName.trim()}
-              className="w-full py-3 px-4 rounded-lg bg-primary text-white font-medium hover:bg-primary-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+              className="w-full py-3.5 px-4 rounded-lg bg-gradient-to-r from-primary to-primary-dark text-black font-medium hover:shadow-[0_0_15px_rgba(255,107,0,0.3)] hover:-translate-y-0.5 disabled:transform-none disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Search className="w-4 h-4" />}
               {loading ? "Analyzing..." : "Analyze Company"}
@@ -189,7 +189,7 @@ export default function InputForm({ onSubmit, onBatchSubmit, loading }: InputFor
                   value={visitsWeek}
                   onChange={(e) => setVisitsWeek(Number(e.target.value))}
                   min={1}
-                  className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+                  className="w-full px-4 py-3 rounded-lg border border-primary/20 bg-black/40 text-white focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                 />
               </div>
             </div>
@@ -201,7 +201,7 @@ export default function InputForm({ onSubmit, onBatchSubmit, loading }: InputFor
             <button
               onClick={handleVisitorSubmit}
               disabled={loading}
-              className="w-full py-3 px-4 rounded-lg bg-primary text-white font-medium hover:bg-primary-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+              className="w-full py-3.5 px-4 rounded-lg bg-gradient-to-r from-primary to-primary-dark text-black font-medium hover:shadow-[0_0_15px_rgba(255,107,0,0.3)] hover:-translate-y-0.5 disabled:transform-none disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Eye className="w-4 h-4" />}
               {loading ? "Analyzing..." : "Analyze Visitor"}
@@ -217,18 +217,18 @@ export default function InputForm({ onSubmit, onBatchSubmit, loading }: InputFor
                 value={newBatch}
                 onChange={(e) => setNewBatch(e.target.value)}
                 placeholder="Add company name..."
-                className="flex-1 px-4 py-2.5 rounded-lg border border-border bg-background text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/40"
+                className="flex-1 px-4 py-3 rounded-lg border border-primary/20 bg-black/40 text-white placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                 onKeyDown={(e) => e.key === "Enter" && addBatchCompany()}
               />
               <button
                 onClick={addBatchCompany}
-                className="px-4 py-2.5 rounded-lg border border-border hover:bg-secondary transition-colors"
+                className="px-4 py-3 rounded-lg border border-primary/20 bg-black/40 text-primary-light hover:bg-primary/20 transition-colors"
               >
                 <Plus className="w-4 h-4" />
               </button>
               <button
                 onClick={() => fileRef.current?.click()}
-                className="px-4 py-2.5 rounded-lg border border-border hover:bg-secondary transition-colors"
+                className="px-4 py-3 rounded-lg border border-primary/20 bg-black/40 text-primary-light hover:bg-primary/20 transition-colors"
                 title="Upload CSV"
               >
                 <Upload className="w-4 h-4" />
@@ -253,7 +253,7 @@ export default function InputForm({ onSubmit, onBatchSubmit, loading }: InputFor
             <button
               onClick={handleBatchSubmit}
               disabled={loading || batchCompanies.length === 0}
-              className="w-full py-3 px-4 rounded-lg bg-primary text-white font-medium hover:bg-primary-dark disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center justify-center gap-2"
+              className="w-full py-3.5 px-4 rounded-lg bg-gradient-to-r from-primary to-primary-dark text-black font-medium hover:shadow-[0_0_15px_rgba(255,107,0,0.3)] hover:-translate-y-0.5 disabled:transform-none disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2"
             >
               {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
               {loading ? "Processing..." : `Analyze ${batchCompanies.length} Companies`}
@@ -284,7 +284,7 @@ function Field({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
-        className="w-full px-4 py-2.5 rounded-lg border border-border bg-background text-foreground placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/40"
+        className="w-full px-4 py-3 rounded-lg border border-primary/20 bg-black/40 text-white placeholder:text-muted focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
       />
     </div>
   );
