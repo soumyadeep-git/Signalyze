@@ -1,6 +1,6 @@
-import json
 from langchain_groq import ChatGroq
 from app.config import get_settings
+from app.utils import extract_json
 from app.services.web_search import search_company_info
 from app.services.scraper import scrape_website
 
@@ -11,11 +11,7 @@ async def enrich_company(state: dict) -> dict:
     domain = state.get("domain", "")
 
     if not company_name:
-        return {
-            **state,
-            "company_profile": {},
-            "agent_statuses": {**state.get("agent_statuses", {}), "enrichment": "complete"},
-        }
+        return {"company_profile": {}}
 
     search_results = await search_company_info(company_name)
     search_text = "\n".join(
@@ -62,9 +58,8 @@ Return ONLY valid JSON with these fields:
 }}"""
 
     resp = await llm.ainvoke(prompt)
-    try:
-        profile = json.loads(resp.content)
-    except (json.JSONDecodeError, AttributeError):
+    profile = extract_json(resp.content)
+    if not profile or not isinstance(profile, dict):
         profile = {
             "company_name": company_name,
             "domain": domain,
@@ -80,8 +75,6 @@ Return ONLY valid JSON with these fields:
     profile.setdefault("company_name", company_name)
 
     return {
-        **state,
         "domain": domain or profile.get("domain", ""),
         "company_profile": profile,
-        "agent_statuses": {**state.get("agent_statuses", {}), "enrichment": "complete"},
     }

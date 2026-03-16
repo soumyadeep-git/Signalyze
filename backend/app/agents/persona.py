@@ -1,6 +1,6 @@
-import json
 from langchain_groq import ChatGroq
 from app.config import get_settings
+from app.utils import extract_json
 
 PAGE_PERSONA_MAP = {
     "pricing": "Buyer / Decision Maker",
@@ -36,13 +36,11 @@ async def infer_persona(state: dict) -> dict:
 
     if input_type == "company":
         return {
-            **state,
             "persona": {
                 "likely_persona": "Unknown",
                 "confidence": 0.0,
                 "reasoning": "No visitor behavior data available.",
             },
-            "agent_statuses": {**state.get("agent_statuses", {}), "persona": "complete"},
         }
 
     visitor = raw.get("visitor", {})
@@ -79,9 +77,8 @@ Return ONLY valid JSON:
 }}"""
 
     resp = await llm.ainvoke(prompt)
-    try:
-        result = json.loads(resp.content)
-    except (json.JSONDecodeError, AttributeError):
+    result = extract_json(resp.content)
+    if not result or not isinstance(result, dict):
         most_common = max(set(page_personas), key=page_personas.count) if page_personas else "Unknown"
         result = {
             "likely_persona": most_common,
@@ -89,8 +86,4 @@ Return ONLY valid JSON:
             "reasoning": "Inferred from page visit patterns.",
         }
 
-    return {
-        **state,
-        "persona": result,
-        "agent_statuses": {**state.get("agent_statuses", {}), "persona": "complete"},
-    }
+    return {"persona": result}

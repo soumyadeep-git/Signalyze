@@ -1,6 +1,6 @@
-import json
 from langchain_groq import ChatGroq
 from app.config import get_settings
+from app.utils import extract_json
 from app.services.scraper import scrape_website
 from app.services.web_search import search_company_tech
 
@@ -11,11 +11,7 @@ async def detect_tech_stack(state: dict) -> dict:
     domain = state.get("domain", "")
 
     if not company_name and not domain:
-        return {
-            **state,
-            "tech_stack": [],
-            "agent_statuses": {**state.get("agent_statuses", {}), "tech_stack": "complete"},
-        }
+        return {"tech_stack": []}
 
     detected_from_site = []
     if domain:
@@ -47,18 +43,11 @@ Include both detected and inferred technologies. Be realistic — don't fabricat
 Return at least the detected ones with high confidence, and add inferred ones with lower confidence."""
 
     resp = await llm.ainvoke(prompt)
-    try:
-        tech_list = json.loads(resp.content)
-        if not isinstance(tech_list, list):
-            tech_list = []
-    except (json.JSONDecodeError, AttributeError):
+    tech_list = extract_json(resp.content)
+    if not tech_list or not isinstance(tech_list, list):
         tech_list = [
             {"category": "Detected", "technology": t, "confidence": 0.9}
             for t in detected_from_site
         ]
 
-    return {
-        **state,
-        "tech_stack": tech_list,
-        "agent_statuses": {**state.get("agent_statuses", {}), "tech_stack": "complete"},
-    }
+    return {"tech_stack": tech_list}

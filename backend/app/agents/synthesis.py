@@ -1,6 +1,6 @@
-import json
 from langchain_groq import ChatGroq
 from app.config import get_settings
+from app.utils import extract_json
 from app.services.web_search import search_company_news
 
 
@@ -60,9 +60,8 @@ Return ONLY valid JSON:
 Make actions specific and actionable. Reference actual data points. Include 2-5 business signals and 3-5 actions."""
 
     resp = await llm.ainvoke(prompt)
-    try:
-        result = json.loads(resp.content)
-    except (json.JSONDecodeError, AttributeError):
+    result = extract_json(resp.content)
+    if not result or not isinstance(result, dict):
         result = {
             "ai_summary": f"{company_name} has been identified as a potential account. Further research is recommended.",
             "business_signals": [],
@@ -74,9 +73,7 @@ Make actions specific and actionable. Reference actual data points. Include 2-5 
         }
 
     return {
-        **state,
         "ai_summary": result.get("ai_summary", ""),
         "business_signals": result.get("business_signals", []),
         "recommended_actions": result.get("recommended_actions", []),
-        "agent_statuses": {**state.get("agent_statuses", {}), "synthesis": "complete"},
     }

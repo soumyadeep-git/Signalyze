@@ -1,6 +1,6 @@
-import json
 from langchain_groq import ChatGroq
 from app.config import get_settings
+from app.utils import extract_json
 
 PAGE_WEIGHTS = {
     "pricing": 3.0,
@@ -80,14 +80,12 @@ async def analyze_intent(state: dict) -> dict:
 
     if input_type == "company":
         return {
-            **state,
             "intent": {
                 "score": 0.0,
                 "stage": "Unknown",
                 "reasoning": "No visitor behavior data available for company-only input.",
                 "signals": [],
             },
-            "agent_statuses": {**state.get("agent_statuses", {}), "intent": "complete"},
         }
 
     visitor = raw.get("visitor", {})
@@ -117,10 +115,10 @@ Analyze the buying intent. Return ONLY valid JSON:
 }}"""
 
     resp = await llm.ainvoke(prompt)
-    try:
-        result = json.loads(resp.content)
+    result = extract_json(resp.content)
+    if result and isinstance(result, dict):
         result["signals"] = signals
-    except (json.JSONDecodeError, AttributeError):
+    else:
         result = {
             "score": base_score,
             "stage": "Evaluation" if base_score >= 6 else "Interest" if base_score >= 3 else "Awareness",
@@ -130,8 +128,4 @@ Analyze the buying intent. Return ONLY valid JSON:
 
     result["score"] = round(min(max(float(result.get("score", base_score)), 0), 10), 1)
 
-    return {
-        **state,
-        "intent": result,
-        "agent_statuses": {**state.get("agent_statuses", {}), "intent": "complete"},
-    }
+    return {"intent": result}

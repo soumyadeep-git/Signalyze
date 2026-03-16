@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TypedDict, Any
+from typing import TypedDict
 from langgraph.graph import StateGraph, END
 
 from app.agents.identification import identify_company
@@ -39,7 +39,6 @@ async def _set_company_from_input(state: dict) -> dict:
     raw = state.get("raw_input", {})
     company = raw.get("company", {})
     return {
-        **state,
         "company_name": company.get("company_name", ""),
         "domain": company.get("domain", "") or "",
         "identification": {
@@ -47,7 +46,6 @@ async def _set_company_from_input(state: dict) -> dict:
             "domain": company.get("domain", "") or "",
             "confidence": 1.0,
         },
-        "agent_statuses": {**state.get("agent_statuses", {}), "identification": "complete"},
     }
 
 

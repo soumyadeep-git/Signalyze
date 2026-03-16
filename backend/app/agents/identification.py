@@ -1,6 +1,6 @@
-import json
 from langchain_groq import ChatGroq
 from app.config import get_settings
+from app.utils import extract_json
 from app.services.ip_lookup import lookup_ip, extract_company_hint
 from app.services.web_search import search_web, find_company_domain
 
@@ -51,20 +51,17 @@ Return ONLY valid JSON:
 {{"company_name": "...", "domain": "...", "confidence": 0.0-1.0}}"""
 
         resp = await llm.ainvoke(prompt)
-        try:
-            parsed = json.loads(resp.content)
+        parsed = extract_json(resp.content)
+        if parsed and isinstance(parsed, dict):
             company_name = parsed.get("company_name", company_name)
             domain = parsed.get("domain", domain)
             confidence = parsed.get("confidence", confidence)
-        except (json.JSONDecodeError, AttributeError):
-            pass
 
     if not company_name and ip_data:
         company_name = ip_data.get("org", "") or ip_data.get("isp", "")
         confidence = 0.3
 
     return {
-        **state,
         "company_name": company_name,
         "domain": domain,
         "identification": {
@@ -72,5 +69,4 @@ Return ONLY valid JSON:
             "domain": domain,
             "confidence": round(confidence, 2),
         },
-        "agent_statuses": {**state.get("agent_statuses", {}), "identification": "complete"},
     }
